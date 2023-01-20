@@ -16,6 +16,8 @@ extension ContentView {
         @Published var selectedPlace: Location?
         
         @Published var isUnlocked = false
+        @Published var errorMessage = ""
+        @Published var showAlert = false
         
         init() {
             do {
@@ -60,16 +62,20 @@ extension ContentView {
                 
                 //if it is start the request and provide a closure to run when it completes
                 context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) { success, authenticationError in
-                    if success {
-                        Task { @MainActor in
+                    Task { @MainActor in
+                        if success {
                             self.isUnlocked = true
+                        } else {
+                            self.errorMessage = "There was a problem authenticating you; please try again."
+                            self.showAlert = true
                         }
-                    } else {
-                        //error
+                        
                     }
                 }
             } else {
-                //no biometrics 
+                //no biometrics
+                errorMessage = "Sorry, your device does not support biometrics"
+                showAlert = true
             }
         }
     }

@@ -52,13 +52,13 @@ struct ContentView: View {
                             viewModel.addLocation()
                         } label: {
                             Image(systemName: "plus")
+                                .padding()
+                                .background(.black.opacity(0.75))
+                                .foregroundColor(.white)
+                                .font(.title)
+                                .clipShape(Circle())
+                                .padding(.trailing)
                         }
-                        .padding()
-                        .background(.black.opacity(0.75))
-                        .foregroundColor(.white)
-                        .font(.title)
-                        .clipShape(Circle())
-                        .padding(.trailing)
                     }
                 }
             } else {
@@ -70,6 +70,11 @@ struct ContentView: View {
                 .background(.blue)
                 .foregroundColor(.white)
                 .clipShape(Capsule())
+                .alert("Authentication error", isPresented: $viewModel.showAlert) {
+                    Button("OK") { }
+                } message: {
+                    Text(viewModel.errorMessage)
+                }
             }
         }
         .sheet(item: $viewModel.selectedPlace) { place in
